@@ -7,7 +7,7 @@ const svg = d3.select("body").append("svg")
 
 function generateGraph(numNodes) {
 
-  const nodes = Array.from({ length: numNodes }, (_, id) => ({ id }));
+  const nodes = Array.from({ length: numNodes }, (_, id) => ({ id, value: id, color: "black" }));
 
 
   const links = nodes.map(({id}, i) => ({
@@ -44,18 +44,14 @@ const node = svg.append("g")
 const circles = node.append("circle")
     .attr("class", "node")
     .attr("r", 20)
-    .attr("fill", "black")
+    .attr("fill", d => d.color)
     .on("dblclick", (event, d) => {
-        const circle = d3.select(event.currentTarget);
-        if (circle.attr("fill") === "red") {
-            circle.attr("fill", "black");
-        } else {
-            circle.attr("fill", "red");
-        }
+        d.color = d.color === "red" ? "black" : "red";
+        d3.select(event.currentTarget).attr("fill", d.color);
     });
 
 const labels = node.append("text")
-    .text(d => d.id)
+    .text(d => d.value)
     .attr("text-anchor", "middle")
     .attr("dy", ".35em")
     .attr("fill", "white");
