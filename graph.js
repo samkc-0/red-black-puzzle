@@ -18,7 +18,7 @@ function generateGraph(numNodes) {
   return { nodes, links };
 
 }
-const { nodes, links } = generateGraph(5);
+const { nodes, links } = generateGraph(25);
 
 
 
