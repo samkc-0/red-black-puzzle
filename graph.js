@@ -5,17 +5,22 @@ const svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-const nodes = [
-    { id: "A" },
-    { id: "B" },
-    { id: "C" }
-];
+function generateGraph(numNodes) {
 
-const links = [
-    { source: "A", target: "B" },
-    { source: "B", target: "C" },
-    { source: "C", target: "A" }
-];
+  const nodes = Array.from({ length: numNodes }, (_, id) => ({ id }));
+
+
+  const links = nodes.map(({id}, i) => ({
+	source: id,
+	target: nodes[(i + 1) % nodes.length].id,
+  }));
+
+  return { nodes, links };
+
+}
+const { nodes, links } = generateGraph(5);
+
+
 
 const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id).distance(100))

@@ -1,6 +1,8 @@
 - [ ] there is an index.html that loads graph.js
 - [ ] graph.js renders a d3 graph with vertices and edges
 - [ ] server.js serves index.html
+- [ ] red/black color and node value is stored on 
 - [ ] double click on a node to toggle red/black color
 - [ ] you can see the value of a node in its circle.
+- [ ] for now, value is the same as id. ie. node is like { id: n, value: n, color: "black" }
 - [ ] click on an edge to delete it
