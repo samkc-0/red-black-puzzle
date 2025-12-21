@@ -1,0 +1,3 @@
+- [ ] there is an index.html that loads graph.js
+- [ ] graph.js renders a d3 graph with vertices and edges
+- [ ] server.js serves index.html
