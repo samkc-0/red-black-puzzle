@@ -54,7 +54,8 @@ const labels = node.append("text")
     .text(d => d.value)
     .attr("text-anchor", "middle")
     .attr("dy", ".35em")
-    .attr("fill", "white");
+    .attr("fill", "white")
+    .style("pointer-events", "none");
 
 let link;
 

@@ -1,4 +1,3 @@
-
 - [x] there is an index.html that loads graph.js
 - [x] graph.js renders a d3 graph with vertices and edges
 - [x] server.js serves index.html
@@ -7,6 +6,6 @@
 - [x] double click on a node to toggle red/black color
 - [x] you can see the value of a node in its circle.
 - [x] for now, value is the same as id. ie. node is like { id: n, value: n, color: "black" }
-- [ ] serve static files from public/, since users should not have access to server.js or the filesystem!!!
-- [ ] text on nodes should now allow any user interaction. I dont want the text to get in the way of double-clicking for red-black color changes.
-- [ ] click on an edge to delete it
+- [x] serve static files from public/, since users should not have access to server.js or the filesystem!!!
+- [x] text on nodes should now allow any user interaction. I dont want the text to get in the way of double-clicking for red-black color changes.
+- [x] click on an edge to delete it
