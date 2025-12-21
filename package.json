@@ -1,0 +1,16 @@
+{
+  "name": "tree",
+  "private": true,
+  "scripts": {
+    "start": "bun server.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
