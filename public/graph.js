@@ -83,12 +83,6 @@ function update() {
 
     // Run simulation for a fixed number of ticks to stabilize initial layout
     for (let i = 0; i < 120; ++i) simulation.tick();
-
-    // Fix node positions after stabilization
-    nodes.forEach(d => {
-        d.fx = d.x;
-        d.fy = d.y;
-    });
 }
 
 simulation.on("tick", () => {
