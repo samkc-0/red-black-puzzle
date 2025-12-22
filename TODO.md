@@ -10,4 +10,5 @@
 - [x] text on nodes should now allow any user interaction. I dont want the text to get in the way of double-clicking for red-black color changes.
 - [x] click on an edge to delete it
 - [ ] nodes are static. they only move when the user drags them. however, they should still be nicely spaced when the app loads.
+- [ ] the user can still click and drag the nodes to move them to a fixed position.
 - [ ] manage node style from styles.css, not from graph.js
