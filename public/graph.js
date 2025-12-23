@@ -187,9 +187,10 @@ function setupApp() {
   }
 
   function addLink(sourceNode, targetNode) {
-    if (linkExists(sourceNode.id, targetNode.id)) return;
-    const newLink = { id: uuid.gen(), source: sourceNode.id, target: targetNode.id };
-    graph.links = [...graph.links, newLink];
+    if (!linkExists(sourceNode.id, targetNode.id)){ 
+      const newLink = { id: uuid.gen(), source: sourceNode.id, target: targetNode.id };
+      graph.links = [...graph.links, newLink];
+    }
     selectedNode = null;
     refreshLinks();
   }
