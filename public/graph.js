@@ -103,11 +103,12 @@ function setupApp() {
     .attr("refX", 5)
     .attr("refY", 0)
     .attr("orient", "auto")
-    .attr("markerWidth", 5)
-    .attr("markerHeight", 5)
+    .attr("markerUnits", "userSpaceOnUse")
+    .attr("markerWidth", 15)
+    .attr("markerHeight", 15)
     .append("path")
     .attr("d", "M0,-2.5L5,0L0,2.5")
-    .attr("fill", "var(--black)");
+    .attr("color", "currentColor");
 
   const rootCircleDef = {
     cx: width / 2,

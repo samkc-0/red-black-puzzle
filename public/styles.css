@@ -24,6 +24,8 @@ svg {
 
 .link {
   stroke: var(--edge-color);
+  fill: var(--edge-color);
+  color: var(--edge-color);
   stroke-width: 4px;
   z-index: 10;
   cursor: pointer;
@@ -31,6 +33,8 @@ svg {
 
 .link:hover {
   stroke: var(--edge-hover);
+  fill: var(--edge-hover);
+  color: var(--edge-hover);
   stroke-width: 8px;
 }
 
