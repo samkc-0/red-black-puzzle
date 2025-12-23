@@ -108,7 +108,8 @@ function setupApp() {
     .attr("markerHeight", 15)
     .append("path")
     .attr("d", "M0,-2.5L5,0L0,2.5")
-    .attr("color", "currentColor");
+    .attr("fill", "currentColor")
+    .style("color", "currentColor");
 
   const rootCircleDef = {
     cx: width / 2,

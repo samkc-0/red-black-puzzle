@@ -32,10 +32,7 @@ svg {
 }
 
 .link:hover {
-  stroke: var(--edge-hover);
-  fill: var(--edge-hover);
-  color: var(--edge-hover);
-  stroke-width: 8px;
+  cursor: pointer;
 }
 
 .node {
