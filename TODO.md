@@ -9,6 +9,4 @@
 - [x] serve static files from public/, since users should not have access to server.js or the filesystem!!!
 - [x] text on nodes should now allow any user interaction. I dont want the text to get in the way of double-clicking for red-black color changes.
 - [x] click on an edge to delete it
-- [ ] nodes are static. they only move when the user drags them. however, they should still be nicely spaced when the app loads.
-- [ ] the user can still click and drag the nodes to move them to a fixed position.
-- [ ] manage node style from styles.css, not from graph.js
+- [ ] there is a dashed circle at the top, and when a user drags a node onto it, that node is now officially the root of the red-black tree. Further checks for red-black properties will be based on this node being the root node. Nodes will snap into this circle.
