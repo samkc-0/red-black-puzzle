@@ -97,6 +97,18 @@ function setupApp() {
 
   const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
+  svg.append("defs").append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "-0 -2.5 5 5")
+    .attr("refX", 5)
+    .attr("refY", 0)
+    .attr("orient", "auto")
+    .attr("markerWidth", 5)
+    .attr("markerHeight", 5)
+    .append("path")
+    .attr("d", "M0,-2.5L5,0L0,2.5")
+    .attr("fill", "var(--black)");
+
   const rootCircleDef = {
     cx: width / 2,
     cy: 100,
@@ -116,7 +128,8 @@ function setupApp() {
     .selectAll(".link")
     .data(graph.links)
     .join("line")
-    .classed("link", true);
+    .classed("link", true)
+    .attr("marker-end", "url(#arrowhead)");
 
   let nodes = null;
 
@@ -216,11 +229,17 @@ function setupApp() {
   }
 
   function tick() {
-    link
-      .attr("x1", (d) => d.source.x)
-      .attr("y1", (d) => d.source.y)
-      .attr("x2", (d) => d.target.x)
-      .attr("y2", (d) => d.target.y);
+    link.each(function(d) {
+      const angle = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x);
+      const targetRadius = d.target.value + RADIUS;
+      const x2 = d.target.x - Math.cos(angle) * (targetRadius);
+      const y2 = d.target.y - Math.sin(angle) * (targetRadius);
+      d3.select(this)
+        .attr("x1", d.source.x)
+        .attr("y1", d.source.y)
+        .attr("x2", x2)
+        .attr("y2", y2);
+    });
     nodes.attr("transform", (d) => `translate(${d.x},${d.y})`);
   }
 
@@ -276,7 +295,7 @@ function setupApp() {
       .selectAll(".link")
       .data(graph.links, (d) => d.id)
       .join(
-        (enter) => enter.append("line").classed("link", true).on("click", cut),
+        (enter) => enter.append("line").classed("link", true).on("click", cut).attr("marker-end", "url(#arrowhead)"),
         (update) => update,
         (exit) => exit.remove(),
       );

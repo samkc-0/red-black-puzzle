@@ -9,4 +9,5 @@
 - [x] serve static files from public/, since users should not have access to server.js or the filesystem!!!
 - [x] text on nodes should now allow any user interaction. I dont want the text to get in the way of double-clicking for red-black color changes.
 - [x] click on an edge to delete it
-- [ ] there is a dashed circle at the top, and when a user drags a node onto it, that node is now officially the root of the red-black tree. Further checks for red-black properties will be based on this node being the root node. Nodes will snap into this circle.
+- [x] there is a dashed circle at the top, and when a user drags a node onto it, that node is now officially the root of the red-black tree. Further checks for red-black properties will be based on this node being the root node. Nodes will snap into this circle.
+- [x] edges/links are rendered as (directional) arrows, from source to target, instead of simple lines.
