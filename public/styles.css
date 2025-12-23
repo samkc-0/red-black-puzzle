@@ -33,6 +33,7 @@ svg {
 
 .link:hover {
   cursor: pointer;
+  stroke: var(--edge-hover);
 }
 
 .node {
