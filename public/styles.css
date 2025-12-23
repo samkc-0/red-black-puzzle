@@ -11,3 +11,83 @@ body { margin: 0; overflow: hidden; }
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+
+:root {
+  --edge-color: #969a97;
+  --edge-hover: #d6d1cd;
+  --node-text: #e5ece9;
+  --red: #d5202f;
+  --red-hover: #df2a39;
+  --black: #100b00;
+  --black-hover: #291c00;
+}
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+#app,
+svg {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+.link {
+  stroke: var(--edge-color);
+  stroke-width: 4px;
+  z-index: 10;
+}
+.link:hover {
+  stroke: var(--edge-hover);
+  stroke-width: 6px;
+}
+
+.node {
+  cursor: move;
+  fill: var(--black);
+  stroke: none;
+  stroke-width: 1.5px;
+}
+
+.node.red {
+  fill: var(--red);
+  stroke: none;
+  stroke-width: 1.5px;
+}
+
+.node text,
+.node.red text {
+  font-size: 23px;
+  fill: white;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.node.hover {
+  fill: var(--black-hover);
+  stroke: var(--black-hover);
+  stroke-width: 3px;
+}
+.node.hover text {
+  stroke: none;
+}
+
+.node.red.hover {
+  stroke: var(--red-hover);
+  fill: var(--red-hover);
+}
+
+.node.selected,
+.node.selected:hover,
+.node.red.selected:hover {
+  stroke-width: 3px;
+  stroke: gold;
+}
+
+.node.selected text {
+  stroke: none;
+  fill: gold;
+}
+
