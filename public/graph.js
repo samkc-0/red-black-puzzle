@@ -285,6 +285,19 @@ function setupApp() {
     tick();
   }
 
+  function validateNode(n, parentNode) {
+    const childrenIds = graph.links.filter(l => l.source === n.id).map(l => l.id);
+
+    // root node can only have 2 children
+    if (parentNode == null && childrenIds.length > 2)
+      return false;
+
+    // children must be geome
+
+    // TODO
+    return;
+  }
+
   svg.on("click", () => { selectedNode = null; });
 
   return svg.node();
