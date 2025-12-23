@@ -92,9 +92,26 @@ let scene = { node: null, link: null, simulation: null };
 
 function setupApp() {
   let selectedNode = null;
+  let rootNodeId = null;
   let timeout = null;
 
   const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+
+  const rootCircleDef = {
+    cx: width / 2,
+    cy: 100,
+    r: RADIUS * 2,
+  };
+
+  const rootCircle = svg.append("circle")
+    .attr("cx", rootCircleDef.cx)
+    .attr("cy", rootCircleDef.cy)
+    .attr("r", rootCircleDef.r)
+    .attr("stroke", "black")
+    .attr("stroke-dasharray", "5,5")
+    .attr("fill", "none");
+
+
   let link = svg
     .selectAll(".link")
     .data(graph.links)
@@ -118,6 +135,7 @@ function setupApp() {
       })
       .classed("red", (d) => d.red)
       .classed("selected", (d) => d.id === selectedNode?.id)
+      .classed("root", (d) => d.id === rootNodeId)
   }
 
   refreshNodes();
@@ -138,7 +156,7 @@ function setupApp() {
   for (let i = 0; i < 300; i++) simulation.tick();
   tick();
 
-  const drag = d3.drag().on("start", dragstart).on("drag", dragged);
+  const drag = d3.drag().on("start", dragstart).on("drag", dragged).on("end", dragend);
 
   nodes
     .call(drag)
@@ -218,6 +236,25 @@ function setupApp() {
     d3.select(this).classed("hover", false);
   }
 
+  function dragend(event, d) {
+    const distance = Math.sqrt(
+      Math.pow(d.x - rootCircleDef.cx, 2) + Math.pow(d.y - rootCircleDef.cy, 2)
+    );
+    if (distance < rootCircleDef.r) {
+      d.x = rootCircleDef.cx;
+      d.y = rootCircleDef.cy;
+      rootNodeId = d.id;
+      console.log("new root node is", rootNodeId);
+      tick();
+    } else {
+      if (d.id === rootNodeId) {
+        rootNodeId = null;
+        console.log("root node unset");
+      }
+    }
+    refreshNodes();
+  }
+
   function dragstart() {
     return;
   }
@@ -225,6 +262,12 @@ function setupApp() {
   function dragged(event, d) {
     d.x = clamp(event.x, 0, width);
     d.y = clamp(event.y, 0, height);
+    const distance = Math.sqrt(
+      Math.pow(d.x - rootCircleDef.cx, 2) + Math.pow(d.y - rootCircleDef.cy, 2)
+    );
+    if (distance < rootCircleDef.r) {
+      console.log("in root circle");
+    }
     tick();
   }
 
