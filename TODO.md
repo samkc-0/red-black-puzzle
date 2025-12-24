@@ -16,3 +16,4 @@
 - [x] there is an svg ladybug at the bottom of the screen
 - [x] the isTree function gives the reason as a reson object that has a code and the detail. there is an enum of the reason codes too. (we want to be able to give the details to users in layman terms later, so they can understand why they are getting the puzzle wrong)
 - [ ] there is a speech bubble above the ladybird image (it will look like the ladybird is talking)
+- [ ] the speech bubble is made with SVG, so it can look nice easily, but there is a div over it (this is where text will be shown).
