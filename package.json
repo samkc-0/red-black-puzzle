@@ -2,10 +2,13 @@
   "name": "tree",
   "private": true,
   "scripts": {
-    "start": "bun server.js"
+    "start": "bun server.js",
+    "test": "jest"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0"
   },
   "peerDependencies": {
     "typescript": "^5"

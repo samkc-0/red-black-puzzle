@@ -306,14 +306,18 @@ function setupApp() {
     tick();
   }
 
-  function validateNode(n, parentNode) {
-    const childrenIds = graph.links.filter(l => l.source === n.id).map(l => l.id);
-
+  function isNodeValidTreeNode(n, parentNode) {
+    const childrenIds = graph.links.filter(l => l.source === n.id).map(l => l.target);
+    const parentIds = graph.links.filter(l => l.target === n.id).map(l => l.source);
     // root node can only have 2 children
     if (parentNode == null && childrenIds.length > 2)
       return false;
 
-    // children must be geome
+
+
+    // left node (< n.value) must be below n and to the left of right child
+
+    // right node (> n.value) must be below n and to the right of right child
 
     // TODO
     return;
