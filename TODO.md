@@ -13,3 +13,4 @@
 - [x] edges/links are rendered as (directional) arrows, from source to target, instead of simple lines.
 - [x] there are unit tests for a function that verifies whether a graph (with lists of nodes and links like in public/graph.js) is a tree or not, starting from a root node specified by id).
 - [ ] isTree not only returns true/false, but when it returns false, it also returns a reason why the graph is not a tree and the relevant node ids.
+- [ ] there is an svg ladybug at the bottom of the screen
