@@ -86,9 +86,9 @@ svg {
 }
 
 .speech-bubble {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  position: relative;
+  bottom: 0px;
+  right: 0px;
   background: #ededed;
   border-radius: .4em;
 }
@@ -106,4 +106,14 @@ svg {
   border-left: 0;
   margin-left: -14.5px;
   margin-bottom: -29px;
+}
+.guide {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.guide img {
+  width: 50px;
+  height: 50px;
 }
