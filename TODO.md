@@ -12,3 +12,4 @@
 - [x] there is a dashed circle at the top, and when a user drags a node onto it, that node is now officially the root of the red-black tree. Further checks for red-black properties will be based on this node being the root node. Nodes will snap into this circle.
 - [x] edges/links are rendered as (directional) arrows, from source to target, instead of simple lines.
 - [x] there are unit tests for a function that verifies whether a graph (with lists of nodes and links like in public/graph.js) is a tree or not, starting from a root node specified by id).
+- [ ] isTree not only returns true/false, but when it returns false, it also returns a reason why the graph is not a tree and the relevant node ids.
