@@ -15,3 +15,5 @@
 - [x] isTree not only returns true/false, but when it returns false, it also returns a reason why the graph is not a tree and the relevant node ids.
 - [x] there is an svg ladybug at the bottom of the screen
 - [x] the isTree function gives the reason as a reson object that has a code and the detail. there is an enum of the reason codes too. (we want to be able to give the details to users in layman terms later, so they can understand why they are getting the puzzle wrong)
+- [ ] the ladybird image is accompanied by a speech bubble, so it looks like the lady bird is saying things to the user.
+- [ ] when the nodes or linkes are refreshed, the ladybird says whether the current graph is a tree or not.
