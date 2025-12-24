@@ -1,3 +1,10 @@
+const isTreeReasonCode = {
+  NO_ROOT_PROVIDED: 'NO_ROOT_PROVIDED',
+  MULTIPLE_PARENTS: 'MULTIPLE_PARENTS',
+  CYCLE_DETECTED: 'CYCLE_DETECTED',
+  DISCONNECTED_NODES: 'DISCONNECTED_NODES',
+};
+
 function isTree(nodes, links, rootId) {
   // An empty graph is considered a valid tree.
   if (nodes.length === 0) {
@@ -9,7 +16,7 @@ function isTree(nodes, links, rootId) {
   if (!rootId && nodes.length > 0) {
       if (nodes.length == 1 && links.length === 0)
           return { isTree: true };
-    return { isTree: false, reason: "No root node provided for a non-empty graph.", nodeIds: nodes.map(n => n.id) };
+    return { isTree: false, reason: { code: isTreeReasonCode.NO_ROOT_PROVIDED, detail: "Please specify a root node." }, nodeIds: nodes.map(n => n.id) };
   }
 
   // Create an adjacency list to represent the graph for cycle detection and reachability.
@@ -30,7 +37,7 @@ function isTree(nodes, links, rootId) {
     // If the target node already has a parent, then it has two parents,
     // which violates the tree property.
     if (parentMap.has(link.target)) {
-      return { isTree: false, reason: `Node ${link.target} has multiple parents.`, nodeIds: [link.source, parentMap.get(link.target), link.target] };
+      return { isTree: false, reason: { code: isTreeReasonCode.MULTIPLE_PARENTS, detail: "A tree node shouldn't have multiple parents" }, nodeIds: [link.source, parentMap.get(link.target), link.target] };
     }
     // Record the parent of the target node.
     parentMap.set(link.target, link.source);
@@ -51,11 +58,12 @@ function isTree(nodes, links, rootId) {
     for (const neighborId of neighbors) {
       // If a neighbor has not been visited, recursively call hasCycle on it.
       if (!visited.has(neighborId)) {
-        if (hasCycle(neighborId)) {
-          return true; // Cycle found in a deeper path.
+        const cycleResult = hasCycle(neighborId);
+        if (cycleResult) {
+          return cycleResult;
         }
       } else if (recursionStack.has(neighborId)) {
-        return { isTree: false, reason: `Cycle detected involving node ${neighborId}.`, nodeIds: Array.from(recursionStack).concat([neighborId]) }; // Cycle detected: neighbor is in current recursion stack (back edge).
+        return { isTree: false, reason: { code: isTreeReasonCode.CYCLE_DETECTED, detail: "A tree should not have any cycles." }, nodeIds: Array.from(recursionStack).concat([neighborId]) }; // Cycle detected: neighbor is in current recursion stack (back edge).
       }
     }
 
@@ -76,12 +84,12 @@ function isTree(nodes, links, rootId) {
   // it means some nodes are disconnected from the root, thus not a tree.
   if (visited.size !== nodes.length) {
     const disconnectedNodeIds = nodes.filter(node => !visited.has(node.id)).map(node => node.id);
-    return { isTree: false, reason: `Disconnected nodes found.`, nodeIds: disconnectedNodeIds };
+    return { isTree: false, reason: { code: isTreeReasonCode.DISCONNECTED_NODES, detail: "A tree must be connected." }, nodeIds: disconnectedNodeIds };
   }
   return { isTree: true };
 }
 
 // For Node.js environment, export the function.
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { isTree };
+  module.exports = { isTree, isTreeReasonCode };
 }
