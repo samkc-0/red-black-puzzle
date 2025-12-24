@@ -90,7 +90,7 @@ function clamp(x, lo, hi) {
 
 let scene = { node: null, link: null, simulation: null };
 
-function setupApp() {
+function setupPuzzle() {
   let selectedNode = null;
   let rootNodeId = null;
   let timeout = null;
@@ -347,5 +347,5 @@ function Uuid() {
   return { gen };
 }
 
-const app = setupApp();
-document.body.appendChild(app);
+const puzzle = setupPuzzle();
+document.body.appendChild(puzzle);
