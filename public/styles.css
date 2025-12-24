@@ -76,12 +76,12 @@ svg {
 .node.selected:hover,
 .node.red.selected:hover {
   stroke-width: 3px;
-  stroke: gold;
+  stroke: silver;
 }
 
 .node.selected text {
   stroke: none;
-  fill: gold;
+  fill: silver;
 }
 
 
