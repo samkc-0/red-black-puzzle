@@ -196,7 +196,7 @@ function setupPuzzle() {
   }
 
   function addEdge(sourceId, targetId) {
-    if (!linkExists(sourceNode.id, targetNode.id)){ 
+    if (!linkExists(sourceId, targetId)) {
       const newEdge = { id: uuid.gen(), source: sourceId, target: targetId };
       graph.edges = [...graph.edges, newEdge];
     }
