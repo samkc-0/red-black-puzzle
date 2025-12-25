@@ -254,6 +254,29 @@ function setupPuzzle() {
         .attr("y2", y2);
     });
     nodes.attr("transform", (d) => `translate(${d.x},${d.y})`);
+
+    const nodeData = graph.vertices;
+    const overlappingNodes = new Set();
+
+    for (let i = 0; i < nodeData.length; i++) {
+      for (let j = i + 1; j < nodeData.length; j++) {
+        const nodeA = nodeData[i];
+        const nodeB = nodeData[j];
+        const dx = nodeA.x - nodeB.x;
+        const dy = nodeA.y - nodeB.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const minDistance = (nodeA.value + RADIUS) + (nodeB.value + RADIUS);
+
+        if (distance < minDistance) {
+          overlappingNodes.add(nodeA.id);
+          overlappingNodes.add(nodeB.id);
+        }
+      }
+    }
+
+    nodes.each(function(d) {
+      d3.select(this).classed("overlapping", overlappingNodes.has(d.id));
+    });
   }
 
   function toggleRed(d) {
