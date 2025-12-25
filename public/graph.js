@@ -3,10 +3,7 @@ const height = document.body.clientHeight;
 const RADIUS = 24;
 const uuid = Uuid();
 
- // const validateTree = window.isTree;
-const validateTree = (nodes,links,root) => {
-  return { isTree: true, reason: { detail: "testing "}};
-}
+const validateTree = window.isTree;
 
 const newNode = (value) => {
   return {
@@ -150,7 +147,7 @@ function setupPuzzle() {
           .attr("text-anchor", "middle")
           .attr("dy", "0.35em")
           .text((d) => d.value ?? "");
-	const { isTree, reason } = validateTree(nodes, graph.links, rootNodeId);
+	const { isTree, reason } = validateTree(graph.nodes, graph.links, rootNodeId);
 	if (reason && reason.detail)
 	      updateSpeechBubble(reason.detail);
 	else updateSpeechBubble("well done, its a tree!");
