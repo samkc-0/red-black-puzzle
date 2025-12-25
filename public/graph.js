@@ -55,7 +55,7 @@ const traverse = (node, callback) => {
   }
 };
 
-const makeLinks = (node) => {
+const makeTreeLinks = (node) => {
   let links = [];
   traverse(node, (n) => {
     if (n.left !== null) {
@@ -68,12 +68,12 @@ const makeLinks = (node) => {
   return links;
 };
 
-const makeGraph = (values) => {
+const makeBSTGraph = (values) => {
   const root = bst(values);
-  const nodes = [];
-  traverse(root, (n) => nodes.push(n));
-  let links = makeLinks(root);
-  return { nodes, links };
+  const vertices = [];
+  traverse(root, (v) => vertices.push(v));
+  let edges = makeTreeLinks(root);
+  return { vertices, edges };
 };
 
 const values = Array.from({ length: 10 }, (_, i) => i);
@@ -84,18 +84,22 @@ const shuffle = (arr) => {
   }
   return arr;
 };
-const graph = makeGraph(shuffle(values));
+
+const graph = makeBSTGraph(shuffle(values));
 
 function clamp(x, lo, hi) {
   return x < lo ? lo : x > hi ? hi : x;
 }
 
-let scene = { node: null, link: null, simulation: null };
+function copyOf(objs) {
+  return objs.map(o => ({...o}));
+}
 
 function setupPuzzle() {
   let selectedNode = null;
   let rootNodeId = null;
   let timeout = null;
+  let edgesSim = copyOf(graph.edges);
 
   const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
@@ -129,7 +133,7 @@ function setupPuzzle() {
 
   let link = svg
     .selectAll(".link")
-    .data(graph.links)
+    .data(edgesSim)
     .join("line")
     .classed("link", true)
     .attr("marker-end", "url(#arrowhead)");
@@ -139,7 +143,7 @@ function setupPuzzle() {
   function refreshNodes() {
     nodes = svg
       .selectAll(".node")
-      .data(graph.nodes)
+      .data(graph.vertices)
       .join((enter) => {
         const g = enter.append("g").attr("class", "node");
         g.append("circle").attr("r", (d) => d.value + RADIUS);
@@ -147,7 +151,7 @@ function setupPuzzle() {
           .attr("text-anchor", "middle")
           .attr("dy", "0.35em")
           .text((d) => d.value ?? "");
-	const { isTree, reason } = validateTree(graph.nodes, graph.links, rootNodeId);
+	const { isTree, reason } = validateTree(graph.vertices, graph.edges, rootNodeId);
 	if (reason && reason.detail)
 	      updateSpeechBubble(reason.detail);
 	else updateSpeechBubble("well done, its a tree!");
@@ -162,13 +166,13 @@ function setupPuzzle() {
 
   const simulation = d3
     .forceSimulation()
-    .nodes(graph.nodes)
+    .nodes(graph.vertices)
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force(
       "link",
       d3
-        .forceLink(graph.links)
+        .forceLink(edgesSim)
         .id((d) => d.id)
         .distance(200),
     )
@@ -187,14 +191,14 @@ function setupPuzzle() {
   link.on("click", cut);
 
   function cut(_, l) {
-    graph.links = graph.links.filter(({ id }) => l.id !== id);
+    graph.edges = graph.edges.filter(({ id }) => l.id !== id);
     refreshLinks();
   }
 
-  function addLink(sourceNode, targetNode) {
+  function addEdge(sourceId, targetId) {
     if (!linkExists(sourceNode.id, targetNode.id)){ 
-      const newLink = { id: uuid.gen(), source: sourceNode.id, target: targetNode.id };
-      graph.links = [...graph.links, newLink];
+      const newEdge = { id: uuid.gen(), source: sourceId, target: targetId };
+      graph.edges = [...graph.edges, newEdge];
     }
     selectedNode = null;
     refreshLinks();
@@ -216,7 +220,8 @@ function setupPuzzle() {
 
     // if a node is selected, create a link
     // between the selected node, and this node
-    else addLink(selectedNode, d);
+    else addEdge(selectedNode.id, d.id);
+
     refreshNodes();
     
   }
@@ -225,10 +230,10 @@ function setupPuzzle() {
   function linkExists(source, target) {
     const sid = typeof source === "object" ? source.id : source;
     const tid = typeof target === "object" ? target.id : target;
-    const exists = graph.links.some(
+    const exists = graph.edges.some(
       (l) =>
-        (l.source.id === sid && l.target.id === tid) ||
-        (l.source.id === tid && l.target.id === sid),
+        (l.source === sid && l.target === tid) ||
+        (l.source === tid && l.target === sid),
     );
     if (exists) {
       console.log(`Link already exists: ${sid} -> ${tid}. Cancelled.`);
@@ -299,34 +304,18 @@ function setupPuzzle() {
   }
 
   function refreshLinks() {
+    edgesSim = copyOf(graph.edges);
     link = svg
       .selectAll(".link")
-      .data(graph.links, (d) => d.id)
+      .data(edgesSim, (d) => d.id)
       .join(
         (enter) => enter.append("line").classed("link", true).on("click", cut).attr("marker-end", "url(#arrowhead)"),
         (update) => update,
         (exit) => exit.remove(),
       );
     link.lower();
-    simulation.force("link").links(graph.links);
+    simulation.force("link").links(edgesSim);
     tick();
-  }
-
-  function isNodeValidTreeNode(n, parentNode) {
-    const childrenIds = graph.links.filter(l => l.source === n.id).map(l => l.target);
-    const parentIds = graph.links.filter(l => l.target === n.id).map(l => l.source);
-    // root node can only have 2 children
-    if (parentNode == null && childrenIds.length > 2)
-      return false;
-
-
-
-    // left node (< n.value) must be below n and to the left of right child
-
-    // right node (> n.value) must be below n and to the right of right child
-
-    // TODO
-    return;
   }
 
   function updateSpeechBubble(text) {

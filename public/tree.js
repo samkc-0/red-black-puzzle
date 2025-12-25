@@ -26,8 +26,13 @@ function isTree(vertices, edges, rootId) {
 
   // Initialize adjacency list for all vertices.
   for (const v of vertices) {
-    adjacencyList.set(vertex.id, []);
+    adjacencyList.set(v.id, []);
   }
+
+  console.log("EDGES");
+  console.log(edges);
+  console.log("ADJACENCY LIST");
+  console.log(adjacencyList);
 
   // Populate adjacency list and check for multiple parents.
   for (const edge of edges) {
