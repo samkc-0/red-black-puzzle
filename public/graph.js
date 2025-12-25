@@ -153,8 +153,8 @@ function setupPuzzle() {
           .text((d) => d.value ?? "");
 	const { isTree, reason } = validateTree(graph.vertices, graph.edges, rootNodeId);
 	if (reason && reason.detail)
-	      updateSpeechBubble(reason.detail);
-	else updateSpeechBubble("well done, its a tree!");
+	      updateGuide(reason.detail);
+	else updateGuide("well done, its a tree!");
         return g;
       })
       .classed("red", (d) => d.red)
@@ -318,9 +318,9 @@ function setupPuzzle() {
     tick();
   }
 
-  function updateSpeechBubble(text) {
-    const speechBubble = document.getElementById("speech-bubble");
-    speechBubble.textContent = text;
+  function updateGuide(text) {
+    const guide = document.getElementById("guide");
+    guide.textContent = text;
   }
 
   svg.on("click", () => { selectedNode = null; });
