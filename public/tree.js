@@ -88,6 +88,8 @@ function isTree(nodes, links, rootId) {
   }
   return { isTree: true };
 }
+if (window)
+  window.isTree = isTree;
 
 // For Node.js environment, export the function.
 if (typeof module !== 'undefined' && module.exports) {
