@@ -269,6 +269,10 @@ function setupPuzzle() {
   }
 
   function dragend(event, d) {
+
+    // user must clear the current root node before a new one will snap to the circle
+    if (rootNodeId != null && rootNodeId != d.id) return;
+
     const distance = Math.sqrt(
       Math.pow(d.x - rootCircleDef.cx, 2) + Math.pow(d.y - rootCircleDef.cy, 2)
     );
