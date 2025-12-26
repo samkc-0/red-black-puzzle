@@ -76,7 +76,6 @@ const makeBSTGraph = (values) => {
   return { vertices, edges };
 };
 
-const values = Array.from({ length: 10 }, (_, i) => i);
 const shuffle = (arr) => {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -85,7 +84,6 @@ const shuffle = (arr) => {
   return arr;
 };
 
-const graph = makeBSTGraph(shuffle(values));
 
 function clamp(x, lo, hi) {
   return x < lo ? lo : x > hi ? hi : x;
@@ -95,7 +93,7 @@ function copyOf(objs) {
   return objs.map(o => ({...o}));
 }
 
-function setupPuzzle() {
+function setupPuzzle(graph) {
   let selectedNode = null;
   let rootNodeId = null;
   let timeout = null;
@@ -374,5 +372,9 @@ function Uuid() {
   return { gen };
 }
 
-const puzzle = setupPuzzle();
+
+const values = Array.from({ length: 10 }, (_, i) => i);
+const graph = makeBSTGraph(shuffle(values));
+
+const puzzle = setupPuzzle(graph);
 document.body.appendChild(puzzle);
