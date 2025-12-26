@@ -373,8 +373,16 @@ function Uuid() {
 }
 
 
-const values = Array.from({ length: 10 }, (_, i) => i);
-const graph = makeBSTGraph(shuffle(values));
+function makeLevel() {
+  const values = Array.from({ length: 4 }, (_, i) => i);
+  const graph = makeBSTGraph(shuffle(values));
+  return graph;
+}
 
-const puzzle = setupPuzzle(graph);
+const levels = Array.from({ length: 3 }, (_) => makeLevel());
+
+let currentLevel = 0;
+
+const puzzle = setupPuzzle(levels[currentLevel]);
+
 document.body.appendChild(puzzle);
