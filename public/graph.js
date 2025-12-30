@@ -5,7 +5,7 @@ const uuid = Uuid();
 
 const validateTree = window.isTree;
 
-const newNode = (value) => {
+const newTreeNode = (value) => {
   return {
     id: uuid.gen(),
     value,
@@ -16,7 +16,7 @@ const newNode = (value) => {
 };
 
 const bst = (arr) => {
-  const root = newNode(arr[0]);
+  const root = newTreeNode(arr[0]);
   for (let i = 1; i < arr.length; i++) {
     insert(root, arr[i]);
   }
@@ -27,7 +27,7 @@ const bst = (arr) => {
 const insert = (node, value) => {
   if (value < node.value) {
     if (node.left === null) {
-      node.left = newNode(value);
+      node.left = newTreeNode(value);
     } else {
       insert(node.left, value);
     }
@@ -35,7 +35,7 @@ const insert = (node, value) => {
   }
   if (value > node.value) {
     if (node.right === null) {
-      node.right = newNode(value);
+      node.right = newTreeNode(value);
     } else {
       insert(node.right, value);
     }
@@ -151,10 +151,8 @@ function setupPuzzle({ id, title, graph, instructions }) {
           .attr("text-anchor", "middle")
           .attr("dy", "0.35em")
           .text((d) => d.value ?? "");
-	const { isTree, reason } = validateTree(graph.vertices, graph.edges, rootNodeId);
-	if (reason && reason.detail)
-	      updateGuide(reason.detail);
-	else updateGuide("well done, its a tree!");
+	const { isTree  } = validateTree(graph.vertices, graph.edges, rootNodeId);
+	if (isTree) updateGuide("✅ Correct!");
         return g;
       })
       .classed("red", (d) => d.color === "red")
@@ -163,6 +161,7 @@ function setupPuzzle({ id, title, graph, instructions }) {
   }
 
   refreshNodes();
+  updateGuide(instructions);
 
   const simulation = d3
     .forceSimulation()
@@ -381,10 +380,16 @@ function makeRandomGraph(n) {
   return graph;
 }
 
-const levels = Array.from({ length: 3 }, (_) => makeRandomGraph(8));
 
-let currentLevel = 0;
+const levels = [ 
+	{ id: 0, title: "start", graph: makeRandomGraph(1), instructions: "do something" }, 
+	{ id: 1, title: "start", graph: {
+		vertices: [ { id: 0, value: 0, color: "black" }, { id: 1, value: 1, color: "black" } ],
+		edges: [ { id: 7, source: 0, target: 1, } ],
+	}, instructions: "do something" }, 
+]
+let currentLevel = 1;
 
-const puzzle = setupPuzzle({ id: 0, title: "start", graph: levels[currentLevel], instructions: "do something" });
+const puzzle = setupPuzzle(levels[currentLevel]);
 
 document.body.appendChild(puzzle);
