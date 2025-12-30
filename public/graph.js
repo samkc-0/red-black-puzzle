@@ -95,9 +95,10 @@ function copyOf(objs) {
 
 
 
-function setupPuzzle({ id, title, graph, instructions }) {
+function setupPuzzle({ id, title, graph, instructions, initRootNodeId }) {
   let selectedNode = null;
-  let rootNodeId = null;
+  let rootNodeId = initRootNodeId || null;
+  if (rootNodeId != null && !graph.vertices.some(v => v.id === rootNodeId)) throw new Error(`Invalid root node ID: ${rootNodeID}, not in graph`);
   let timeout = null;
   let edgesSim = copyOf(graph.edges);
 
@@ -384,9 +385,9 @@ function makeRandomGraph(n) {
 const levels = [ 
 	{ id: 0, title: "start", graph: makeRandomGraph(1), instructions: "do something" }, 
 	{ id: 1, title: "start", graph: {
-		vertices: [ { id: 0, value: 0, color: "black" }, { id: 1, value: 1, color: "black" } ],
-		edges: [ { id: 7, source: 0, target: 1, } ],
-	}, instructions: "do something" }, 
+		vertices: [ { id: "zero", value: 0, color: "black" }, { id: "one", value: 1, color: "black" } ],
+		edges: [ { id: "link-seven", source: "zero", target: "one", } ],
+	}, instructions: "do something", initRootNodeId: "zero", }, 
 ]
 let currentLevel = 1;
 
