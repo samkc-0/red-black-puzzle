@@ -11,7 +11,7 @@ const newNode = (value) => {
     value,
     left: null,
     right: null,
-    red: false,
+    color: "black",
   };
 };
 
@@ -93,7 +93,9 @@ function copyOf(objs) {
   return objs.map(o => ({...o}));
 }
 
-function setupPuzzle(graph) {
+
+
+function setupPuzzle({ id, title, graph, instructions }) {
   let selectedNode = null;
   let rootNodeId = null;
   let timeout = null;
@@ -155,7 +157,7 @@ function setupPuzzle(graph) {
 	else updateGuide("well done, its a tree!");
         return g;
       })
-      .classed("red", (d) => d.red)
+      .classed("red", (d) => d.color === "red")
       .classed("selected", (d) => d.id === selectedNode?.id)
       .classed("root", (d) => d.id === rootNodeId)
   }
@@ -191,6 +193,7 @@ function setupPuzzle(graph) {
   function cut(_, l) {
     graph.edges = graph.edges.filter(({ id }) => l.id !== id);
     refreshLinks();
+    refreshNodes();
   }
 
   function addEdge(sourceId, targetId) {
@@ -230,11 +233,11 @@ function setupPuzzle(graph) {
     const tid = typeof target === "object" ? target.id : target;
     const exists = graph.edges.some(
       (l) =>
-        (l.source === sid && l.target === tid) ||
-        (l.source === tid && l.target === sid),
+        (l.source === sid && l.target === tid)
+        || (l.target === sid && l.source === tid)
     );
     if (exists) {
-      console.log(`Link already exists: ${sid} -> ${tid}. Cancelled.`);
+      console.log(`Link already exists between ${sid} and ${tid}. Cancelled.`);
     }
     return exists;
   }
@@ -278,7 +281,7 @@ function setupPuzzle(graph) {
   }
 
   function toggleRed(d) {
-    d.red = !d.red;
+    d.color = d.color === "red" ? "black" : "red";
   }
 
   function hover(_, d) {
@@ -290,23 +293,22 @@ function setupPuzzle(graph) {
   }
 
   function dragend(event, d) {
-
-    // user must clear the current root node before a new one will snap to the circle
-    if (rootNodeId != null && rootNodeId != d.id) return;
-
-    const distance = Math.sqrt(
-      Math.pow(d.x - rootCircleDef.cx, 2) + Math.pow(d.y - rootCircleDef.cy, 2)
-    );
-    if (distance < rootCircleDef.r) {
-      d.x = rootCircleDef.cx;
-      d.y = rootCircleDef.cy;
-      rootNodeId = d.id;
-      console.log("new root node is", rootNodeId);
-      tick();
-    } else {
-      if (d.id === rootNodeId) {
-        rootNodeId = null;
-        console.log("root node unset");
+    // Only handle root assignment if no root is set, or if we are dragging the current root.
+    if (rootNodeId == null || rootNodeId == d.id) {
+      const distance = Math.sqrt(
+        Math.pow(d.x - rootCircleDef.cx, 2) + Math.pow(d.y - rootCircleDef.cy, 2)
+      );
+      if (distance < rootCircleDef.r) {
+        d.x = rootCircleDef.cx;
+        d.y = rootCircleDef.cy;
+        rootNodeId = d.id;
+        console.log("new root node is", rootNodeId);
+        tick();
+      } else {
+        if (d.id === rootNodeId) {
+          rootNodeId = null;
+          console.log("root node unset");
+        }
       }
     }
     refreshNodes();
@@ -373,16 +375,16 @@ function Uuid() {
 }
 
 
-function makeLevel() {
-  const values = Array.from({ length: 4 }, (_, i) => i);
+function makeRandomGraph(n) {
+  const values = Array.from({ length: n }, (_, i) => i);
   const graph = makeBSTGraph(shuffle(values));
   return graph;
 }
 
-const levels = Array.from({ length: 3 }, (_) => makeLevel());
+const levels = Array.from({ length: 3 }, (_) => makeRandomGraph(8));
 
 let currentLevel = 0;
 
-const puzzle = setupPuzzle(levels[currentLevel]);
+const puzzle = setupPuzzle({ id: 0, title: "start", graph: levels[currentLevel], instructions: "do something" });
 
 document.body.appendChild(puzzle);

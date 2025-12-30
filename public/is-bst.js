@@ -23,14 +23,14 @@
       if (vertices.length === 1 && edges.length === 0) {
         return { isTree: true, reason: { detail: "Single node is a valid BST." } };
       }
-      return { isTree: false, reason: { code: reasonCode.NO_ROOT_PROVIDED, detail: "Please specify a root vertex." }, vertexIds: vertices.map(v => v.id) };
+      return { isTree: false, reason: { code: reasonCode.NO_ROOT_PROVIDED, detail: "Choose a root node by moving it into the dashed circle." }, vertexIds: vertices.map(v => v.id) };
     }
     
     const nodes = new Map(vertices.map(v => [v.id, {...v, inferredLeft: null, inferredRight: null}]));
     
     const rootNode = nodes.get(rootId);
     if (!rootNode) {
-        return { isTree: false, reason: { code: reasonCode.ROOT_NODE_NOT_FOUND, detail: `Root node with ID ${rootId} not found.` }, vertexIds: [rootId] };
+      throw new Error(`Invalid root node: ${rootId}`);
     }
 
     const adj = new Map();
@@ -45,7 +45,9 @@
     const valueSet = new Set();
     for (const v of vertices) {
         if (valueSet.has(v.value)) {
-            return { isTree: false, reason: { code: reasonCode.DUPLICATE_VALUES, detail: `Duplicate value ${v.value} found.` }, vertexIds: vertices.filter(n => n.value === v.value).map(n => n.id) };
+          const original = valueSet.get(v.value).id;
+	  const dupe = v.id;
+	  throw new Error(`Duplicata vertex values found with ids ${original} and ${dupe}.`);
         }
         valueSet.add(v.value);
     }
@@ -68,13 +70,13 @@
         const centerChildren = candidateChildren.filter(c => c.x === p.x);
 
         if (centerChildren.length > 0) {
-            return { isTree: false, reason: { code: reasonCode.GEOMETRY_VIOLATION, detail: `Child node cannot have the same x-coordinate as its parent.` }, vertexIds: [p.id, centerChildren[0].id] };
+            return { isTree: false, reason: { code: reasonCode.GEOMETRY_VIOLATION, detail: `Is node ${centerChildren[0].value} a left or right child?` }, vertexIds: [p.id, centerChildren[0].id] };
         }
         if (leftChildren.length > 1) {
-            return { isTree: false, reason: { code: reasonCode.TOO_MANY_CHILDREN, detail: `Node ${p.value} has more than one left child.` }, vertexIds: [p.id, ...leftChildren.map(c => c.id)] };
+            return { isTree: false, reason: { code: reasonCode.TOO_MANY_CHILDREN, detail: `Node ${p.value} has too many left children.` }, vertexIds: [p.id, ...leftChildren.map(c => c.id)] };
         }
         if (rightChildren.length > 1) {
-            return { isTree: false, reason: { code: reasonCode.TOO_MANY_CHILDREN, detail: `Node ${p.value} has more than one right child.` }, vertexIds: [p.id, ...rightChildren.map(c => c.id)] };
+            return { isTree: false, reason: { code: reasonCode.TOO_MANY_CHILDREN, detail: `Node ${p.value} has too many right children.` }, vertexIds: [p.id, ...rightChildren.map(c => c.id)] };
         }
 
         const leftChild = leftChildren[0];
@@ -85,7 +87,7 @@
 
         if (leftChild) {
             if (parents.has(leftChild.id)) {
-                return { isTree: false, reason: { code: reasonCode.MULTIPLE_PARENTS, detail: `Node ${leftChild.value} has multiple parents.` }, vertexIds: [leftChild.id, p.id, parents.get(leftChild.id)] };
+                return { isTree: false, reason: { code: reasonCode.MULTIPLE_PARENTS, detail: `Node ${leftChild.value} has too many parents.` }, vertexIds: [leftChild.id, p.id, parents.get(leftChild.id)] };
             }
             parents.set(leftChild.id, p.id);
             visited.add(leftChild.id);
@@ -93,7 +95,7 @@
         }
         if (rightChild) {
             if (parents.has(rightChild.id)) {
-                return { isTree: false, reason: { code: reasonCode.MULTIPLE_PARENTS, detail: `Node ${rightChild.value} has multiple parents.` }, vertexIds: [rightChild.id, p.id, parents.get(rightChild.id)] };
+                return { isTree: false, reason: { code: reasonCode.MULTIPLE_PARENTS, detail: `Node ${rightChild.value} has too many parents.` }, vertexIds: [rightChild.id, p.id, parents.get(rightChild.id)] };
             }
             parents.set(rightChild.id, p.id);
             visited.add(rightChild.id);
@@ -103,15 +105,17 @@
 
     if (visited.size !== vertices.length) {
         const disconnected = vertices.filter(v => !visited.has(v.id));
-        return { isTree: false, reason: { code: reasonCode.DISCONNECTED_NODES, detail: "A tree must be connected." }, vertexIds: disconnected.map(v => v.id) };
+        return { isTree: false, reason: { code: reasonCode.DISCONNECTED_NODES, detail: "Parent nodes should point to child nodes. Child nodes should not point to parent nodes." }, vertexIds: disconnected.map(v => v.id) };
     }
 
     function checkBst(node, min, max) {
         if (!node) return null;
-        if (node.value <= min || node.value >= max) {
-            return { isTree: false, reason: { code: reasonCode.NOT_A_BST, detail: `Node with value ${node.value} violates BST property.` }, vertexIds: [node.id] };
+        if (node.value <= min) { 
+            return { isTree: false, reason: { code: reasonCode.NOT_A_BST, detail: `Right children should to be smaller than their parents.` }, vertexIds: [node.id] };
         }
-        
+	if (node.value >= max) {
+            return { isTree: false, reason: { code: reasonCode.NOT_A_BST, detail: `Left children should be smaller than their parents.` }, vertexIds: [node.id] };
+	} 
         // Adjacency check is implicit in child inference, but we can double check child-parent adjacency.
         if (node.inferredLeft && !adj.get(node.id).has(node.inferredLeft.id)) {
              return { isTree: false, reason: { code: reasonCode.ADJACENCY_VIOLATION, detail: `Node ${node.inferredLeft.value} is not adjacent to its parent ${node.value}.`}, vertexIds: [node.id, node.inferredLeft.id] };
