@@ -178,6 +178,14 @@ function setupPuzzle({ id, title, graph, instructions, initRootNodeId }) {
     )
     .stop();
   for (let i = 0; i < 300; i++) simulation.tick();
+
+  if (rootNodeId != null) {
+    const rootNode = graph.vertices.find(v => v.id === rootNodeId);
+    if (rootNode) {
+      rootNode.x = rootCircleDef.cx;
+      rootNode.y = rootCircleDef.cy;
+    }
+  }
   tick();
 
   const drag = d3.drag().on("start", dragstart).on("drag", dragged).on("end", dragend);
