@@ -185,6 +185,7 @@ function setupPuzzle({ id, title, graph, instructions, initRootNodeId }) {
       .classed("red", (d) => d.color === "red")
       .classed("selected", (d) => d.id === selectedNode?.id)
       .classed("root", (d) => d.id === rootNodeId)
+    console.log(nodes);
   }
 
   refreshNodes();
