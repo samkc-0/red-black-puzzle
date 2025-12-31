@@ -180,6 +180,7 @@ function setupPuzzle({ id, title, graph, instructions, initRootNodeId }) {
           .text((d) => d.value ?? "");
 	const { isTree  } = validateTree(graph.vertices, graph.edges, rootNodeId);
 	if (isTree) updateGuide("✅ Correct!");
+	else updateGuide(instructions);
         return g;
       })
       .classed("red", (d) => d.color === "red")
@@ -418,13 +419,18 @@ function makeRandomGraph(n) {
 
 
 const levels = [ 
-	{ id: 0, title: "start", graph: makeRandomGraph(1), instructions: "do something" }, 
-	{ id: 1, title: "start", graph: {
+	{ id: 0, title: "start", graph: makeRandomGraph(1), instructions: "Make 0 the top node, by placing it in the dashed circle." }, 
+	{ id: 1, title: "right", graph: {
 		vertices: [ { id: "zero", value: 0, color: "black" }, { id: "one", value: 1, color: "black" } ],
 		edges: [ { id: "link-seven", source: "zero", target: "one", } ],
-	}, instructions: "do something", initRootNodeId: "zero", }, 
+	}, instructions: "1 is bigger than 0. Drag it to the right.", initRootNodeId: "zero", }, 
+	{ id: 1, title: "left", graph: {
+		vertices: [ { id: "zero", value: 0, color: "black" }, { id: "one", value: 1, color: "black" } ],
+		edges: [ { id: "link-eight", source: "one", target: "zero", } ],
+	}, instructions: "0 is smaller than 1. Drag it to the left.", initRootNodeId: "one", }, 
+
 ]
-let currentLevel = 1;
+let currentLevel = 2;
 
 const puzzle = setupPuzzle(levels[currentLevel]);
 
