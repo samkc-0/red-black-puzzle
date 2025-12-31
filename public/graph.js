@@ -5,6 +5,32 @@ const uuid = Uuid();
 
 const validateTree = window.isTree;
 
+function newVertex(value, x = 0, y = 0, color = "black", id = null) {
+  id = (uuid == null) ? uuid.gen() : uuid;
+  if (typeof id !== "string")
+    throw new Error(`vertex has invalid id '${id}' of type ${typeof id}`);
+
+  if (value == undefined)
+    throw new Error(`vertex with id ${id} needs a value, but got none`);
+
+  return { id, value, x, y, color };
+}
+
+function newEdge(source, target, id = null) {
+  id = (uuid == null) ? uuid.gen() : uuid;
+
+  if (typeof source !== "string")
+    throw new Error(`edge has invalid source '${source}' of type ${typeof source}`);
+
+  if (typeof target !== "string")
+    throw new Error(`edge has invalid id '${target}' of type ${typeof target}`);
+
+  if (typeof id !== "string")
+    throw new Error(`edge has invalid id '${id}' of type ${typeof id}`);
+
+  return { id, source, target };
+}
+
 const newTreeNode = (value) => {
   return {
     id: uuid.gen(),
